@@ -56,8 +56,65 @@ return cell
 }
 ```
 
-## добавляем навбар и навбатттон
-от навбаттона делаем action в контроллер (перетаскиваем с ctrl ниже viewDidLoad)
+## делаем добавление и удаление городов
+* добавляем навбар и навбатттон
+* от навбаттона делаем action в контроллер (перетаскиваем с ctrl ниже viewDidLoad)
+
+//добавляем код в созданный action
+```swift
+@IBAction func addCity(_ sender: Any) {
+    //создаем объекет Alert
+    let alert = UIAlertController(title: "Добавление город", message: "Добавьте пожалуйста город!", preferredStyle: .alert)
+    
+    //добавляем к алерту текстовое поле
+    alert.addTextField { (textField) in }
+    
+    //добавляем действие на кнопку ОК
+    alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (alertAction) in
+        //в алерте может быть несколько текстовых полей, поэтому нужно вытаскиваем по индексу
+        let textField = alert.textFields![0] as UITextField
+        
+        //в свой список городов добавляем новый элемент
+        self.cityList.append(textField.text!)
+        
+        //обновляем отображение
+        self.tableView.reloadData()
+        }))
+
+    //создаем действие на кнопку отмены
+    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (alertAction) in }))
+    
+    self.present(alert, animated: true, completion: nil)
+}
+```
+
+* переопределяем действие для удаления ячейки
+
+```swift 
+override func tableView(_ tableView: UITableView, commit editingStyle:  UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+        // Delete the row from the data source
+
+        cityList.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+        tableView.reloadData()
 
 
+    } else if editingStyle == .insert {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }
+}
+```
 
+* переопределяем событие при выборе элемента списка
+```swift
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == "toMain" {
+        let vc = segue.destination as! ViewController
+        let index = self.tableView.indexPathForSelectedRow
+        
+        //обратите внимание - в ViewController должна быть объявлена переменная city
+        vc.city = cityList[(index?.row)!]
+    }
+}
+```
