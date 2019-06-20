@@ -44,7 +44,7 @@ return cell
 * в ячейку добавляем нужные объекты (label...)
 * outlet-ы объектов добавляем к классу
 
-меняем вывод названия города
+## меняем вывод названия города
 
 ```swift
 override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -56,7 +56,8 @@ return cell
 }
 ```
 
-
+## добавляем навбар и навбатттон
+от навбаттона делаем action в контроллер (перетаскиваем с ctrl ниже viewDidLoad)
 
 
 
