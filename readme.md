@@ -158,7 +158,7 @@ import Alamofire
 import SwiftyJSON
 ```
 
-## Получение температуры
+## Получение температуры и иконки (солнышко, тучки...)
 С гитхаба копипастим пример запроса и заворачиваем его в функцию (ViewController)
 ```swift
 func downloadData(city: String) {
@@ -179,6 +179,16 @@ func downloadData(city: String) {
                 let json = JSON(value)
                 self.temp = json["main"]["temp"].stringValue
                 self.lblTemp.text = json["main"]["temp"].stringValue+"°C"
+                
+                //можно сразу запросить иконку (только нужно хранить название предыдущей, чтобы не запрашивать постоянно)
+                let icoName = json["weather"][0]["icon"].stringValue
+                
+                if let urlStr2 = URL(string: "https://openweathermap.org/img/w/\(icoName).png") {
+                    if let data = try? Data(contentsOf: urlStr2){
+                        self.icoWeather.image = UIImage(data: data)
+                    }
+                } 
+                
             case .failure(let error):
                 print(error)
         }
