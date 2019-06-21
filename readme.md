@@ -1,4 +1,6 @@
-1 Создаем новый проект
+# Проект "погода"
+
+Создаем новый проект
 
 ## добавление фона
 * картинку перенести в папку Assets.xcassets В ПРИЛОЖЕНИИ
@@ -117,4 +119,76 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         vc.city = cityList[(index?.row)!]
     }
 }
+```
+
+## Подключаем апи для получения прогноза погоды
+
+### Добавляем библиотеки
+
+1 устанавливаем поддержку cocoapods (если еще не установлен)
+``sudo gem install cocoapods``
+
+2 инициализируем pod  для нашего проекта (в каталоге с файлом проекта *.xcodeproj)
+``pod init``
+
+3 в созданном файле (Podfile) добавляем зависимости (названия библиотек) для работы с http и json
+```
+# проверяем название целевого проекта
+target 'weather' do
+
+...
+
+# Pods for weather
+pod 'Alamofire'
+pod 'SwiftyJSON'
+
+...
+```
+
+4 Устанавливаем зависимости
+ ```pod install```
+ 
+ 5 Теперь вместо проекта нужно запускать *.xcworkspace
+ 
+ 6 Пересобираем проект, чтобы проверить ошибки версий библиотек (Product - Build)
+ 
+ 7 В ViewController.swift добавляем импорт нужных библиотек
+```swift
+import Alamofire
+import SwiftyJSON
+```
+
+## Получение температуры
+С гитхаба копипастим пример запроса и заворачиваем его в функцию (ViewController)
+```swift
+func downloadData(city: String) {
+    // токен для АПИ
+    let token = "1e936ee21707e2a418e98dca00877357"
+
+    // УРЛ с городом, метрической системой и токеном
+    let urlStr = "https://api.openweathermap.org/data/2.5/weather?q=\(city)&units=metric&appid=\(token)"
+
+    // перекодируем адрес (URLencode)
+    let url = urlStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+
+    // посылаем запрос
+    Alamofire.request(url!, method: .get).validate().responseJSON { response in
+        switch response.result {
+            case .success(let value):
+                //если запрос выполнен успешно, то разбираем ответ и вытаскиваем нужные данные
+                let json = JSON(value)
+                self.temp = json["main"]["temp"].stringValue
+                self.lblTemp.text = json["main"]["temp"].stringValue+"°C"
+            case .failure(let error):
+                print(error)
+        }
+    }
+}
+```
+ 
+Запрашиваем температуру при отрисовке экрана
+```swift
+override func viewDidLoad() {
+...
+    downloadData(city: city)
 ```
