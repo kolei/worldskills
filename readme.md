@@ -271,3 +271,12 @@ override func viewWillAppear(_ animated: Bool) {
     loadWeatherInfo()
 }
 ```
+# "Погода" на часах
+
+![](img/watch-create.png)
+
+* Добавляем права для получения данных с сервера
+
+![](img/rights.png)
+
+При связи кнопки со вторым экраном выбираем "push"
