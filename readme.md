@@ -220,6 +220,24 @@ override func viewDidLoad() {
     downloadData(city: city)
 ```
 
+##Простой способ хранить несекурные данные (последний выбранный город и список городов)
+
+```swift
+// получение ранее сохраненных данных
+let city = UserDefaults.standard.string(forKey: "lastCity") ?? "Москва"
+
+let savedList = UserDefaults.standard.stringArray(forKey: "cityList") ?? [String]()
+for city in savedList {
+    cityList.append(city)
+}
+
+// при изменении списка (добавили, удалили город) пересохраняем 
+UserDefaults.standard.set(self.cityList, forKey: "cityList")
+
+// при выборе города аналогично
+UserDefaults.standard.set(cityList[(index?.row)!], forKey: "lastCity")
+```
+
 # Проект "tvOS" - погода на телевизоре
 
 При создании проекта выбираем шаблон "tvOS" и так же "Single View App"
