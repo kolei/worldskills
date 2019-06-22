@@ -2,7 +2,11 @@
 
 Чтобы не обрабатывать каждую кнопку отдельно, можно при создании первого оутлета выбрать в connection вместо "outlet" "outlet collection" 
 
+![](img/collection.png)
+
 Сделать связь созданной коллекции с нужными кнопками и затем обрабатывать списком
+
+![](img/callback.png)
 
 ```swift
 for outlet in outletCollection {
@@ -223,6 +227,8 @@ override func viewDidLoad() {
 ![](img/tvos-create.png)
 
 После создания файла для контроллера (второй экран) не забываем в свойствах контроллера указать созданный класс
+
+![](img/setclass.png)
 
 Для поиска введенного города нужно связать текстовое поле с экземпляром класса (``tfCityName.delegate = self``) и реализовать функцию перехватчик ``textFieldShouldReturn``
 
