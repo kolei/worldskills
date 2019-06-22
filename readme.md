@@ -1,3 +1,16 @@
+# Проект "Калькулятор"
+
+Чтобы не обрабатывать каждую кнопку отдельно, можно при создании первого оутлета выбрать в connection вместо "outlet" "outlet collection" 
+
+Сделать связь созданной коллекции с нужными кнопками и затем обрабатывать списком
+
+```swift
+for outlet in outletCollection {
+    outlet.layer.borderWidth = 1
+    outlet.layer.borderColor = UIColor.darkGray.cgColor
+}
+```
+
 # Проект "погода"
 
 Создаем новый проект
@@ -201,4 +214,36 @@ func downloadData(city: String) {
 override func viewDidLoad() {
 ...
     downloadData(city: city)
+```
+
+# Проект "tvOS" - погода на телевизоре
+
+При создании проекта выбираем шаблон "tvOS" и так же "Single View App"
+
+![](img/tvos-create.png)
+
+После создания файла для контроллера (второй экран) не забываем в свойствах контроллера указать созданный класс
+
+Для поиска введенного города нужно связать текстовое поле с экземпляром класса (``tfCityName.delegate = self``) и реализовать функцию перехватчик ``textFieldShouldReturn``
+
+```swift
+override func viewDidLoad() {
+    super.viewDidLoad()
+
+    // связываем с собой, чтобы сработала функция "textFieldShouldReturn"
+    tfCityName.delegate = self
+}
+
+func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    searchCity(city: tfCityName.text!)
+    return true
+}
+```
+
+Чтобы при возврате на первый экран обновить информацию нужно переопределеить функцию ``viewWillAppear`` и снова вызвать функцию поиска погоды
+
+```swift
+override func viewWillAppear(_ animated: Bool) {
+    loadWeatherInfo()
+}
 ```
