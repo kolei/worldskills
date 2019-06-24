@@ -341,16 +341,7 @@ override func viewWillAppear(_ animated: Bool) {
     }
 }
 
-// при включении CLLocationManager перехватываем управление и запрашиваем текущую позицию
-override func viewWillAppear(_ animated: Bool) {
-    if CLLocationManager.locationServicesEnabled() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
-    }
-}
-
-/грузим достопримечательности с сервера
+//грузим достопримечательности с сервера
 func loadArts(){
     let url = "http://cars.areas.su/arts"
     // посылаем запрос
