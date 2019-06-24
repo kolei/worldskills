@@ -332,12 +332,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapView.setRegion(region, animated: true)
         
         // добвляем на карту наши достопримечательности
-        // здесь "places" массив объектов, описанный локально. В реальной жизни список объектов мы будем получать по сети 
-        for p in places {
-            mapView.addAnnotation(
-                Artwork(title: p.title,
-                        locationName: p.desc,
-                        coordinate: p.coord))
+        for (i,p) in places.enumerated() {
+            let aw = Artwork(   title: p.title,
+                                locationName: p.desc,
+                                coordinate: p.coord,
+                                imgName: p.imgName,
+                                tag: i)
+        
+            mapView.addAnnotation( aw )
         }
     }
 ```
@@ -365,13 +367,16 @@ class Artwork: NSObject, MKAnnotation {
     let title: String?
     let locationName: String
     let coordinate: CLLocationCoordinate2D
+    let imgName: String
+    let tag: Int
     
     // конструтор (описывает какие параметры нужны классу при создании)
-    init(title: String, locationName: String, coordinate: CLLocationCoordinate2D) {
+    init(title: String, locationName: String, coordinate: CLLocationCoordinate2D, imgName: String, tag: Int) {
         self.title = title
         self.locationName = locationName
         self.coordinate = coordinate
-        
+        self.imgName = imgName
+        self.tag = tag
         super.init()
     }
     
@@ -421,6 +426,12 @@ class Artwork: NSObject, MKAnnotation {
             let mapsButton = UIButton(  frame: CGRect(origin: CGPoint.zero,
                                         size: CGSize(width: 200, height: 200)))
             mapsButton.setBackgroundImage(UIImage(named: "bigban"), for: UIControl.State())
+            mapsButton.tag = annotation.tag
+            
+            // добавляем событие для нашей кнопки
+            mapsButton.addTarget(self, action: #selector(buttonClicked(_:)), for: .touchUpInside)
+
+            
             view.rightCalloutAccessoryView = mapsButton
 
             // по идее класс MKMarkerAnnotationView отображает title и subtite из нашей метки
