@@ -429,6 +429,83 @@ class Artwork: NSObject, MKAnnotation {
     }
 ```
 
+## Добавляем посторение маршрута к выбранной достопримечательности
+
+По идее выбор обычной геометки отслеживается функцией
+
+```swift
+func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView){}
+```
+
+Но так как в своем проекте я использую геометку с доп. информацией, то постоение маршрута делаю по клику на изображение достопримечательности. Для этого после создания кнопки (а изображение у нас положено на кнопку) добавляю для нее обработчик
+
+```swift
+// добавляем событие для нашей кнопки
+mapsButton.addTarget(self, action: #selector(buttonClicked(_:)), for: .touchUpInside)
+```
+
+> В принципе это тоже самое, если в дизайнере создать action перетаскиванием
+
+И соответсвенно пишем реализацию этой функции
+
+```swift
+// событие возникает при клике на картинку в детальном описании геометки
+@objc func buttonClicked(_ sender: UIButton) {
+    //очищаю старые пути
+    self.mapView.removeOverlays(self.mapView.overlays)
+
+    // беру координату позиции пользователи и выбранной геометки
+    // в tag я храню индекс в массиве мест
+    let srcCoord = mapView.userLocation.coordinate,
+        targetCoord = places[sender.tag].coord
+
+    // дальше все по лекции
+    let src = MKPlacemark(coordinate: srcCoord),
+        target = MKPlacemark(coordinate: targetCoord)
+
+    let req = MKDirections.Request()
+
+    req.source = MKMapItem(placemark: src)
+    req.destination = MKMapItem(placemark: target)
+    req.transportType = .walking
+
+    let direction = MKDirections(request: req)
+
+    direction.calculate{(response, error) in
+        guard let directionResonse = response else {
+            if let error = error {
+                print("we have error getting directions==\(error.localizedDescription)")
+                }
+                return
+        }
+
+        let route = directionResonse.routes[0]
+        self.mapView.addOverlay(route.polyline, level: .aboveRoads)
+
+        let rect = route.polyline.boundingMapRect
+        self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
+    }
+}
+
+// срабатывает при добавлении оверлея
+func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+    let render = MKPolylineRenderer(overlay: overlay)
+    render.strokeColor = UIColor.blue
+    render.lineWidth = 4.0
+    return render
+}
+```
+
+Позже нашел еще одну функцию, вроде как она должна срабатывать при клике как раз на доп. информацию
+
+```swift
+func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView,
+                calloutAccessoryControlTapped control: UIControl) {
+        let location = view.annotation as! Artwork
+        ...
+}
+```
+
 # Что такое super
 
 Народ интересовался что делает *super*. Это относится к теории ООП и означает вызов метода предка. Вам достаточно запомнить что если такой вызов есть, то удалять его нельзя и он должен быть в первой строке функции.
