@@ -342,6 +342,21 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
 ```
 
+> у народа возник вопрос, где брать places:
+```swift
+// массив достропримечательностей (в реальной жизни мы их должны получать откуда-то извне)
+let places:  [place] = [
+    place(  title: "big ban", 
+            desc: "desc",
+            coord: CLLocationCoordinate2D(latitude: 51.50007773, longitude: -0.1246402),
+            imgName: "bigban"),
+    place(  title: "city",
+            desc: "desc 2",
+            coord: CLLocationCoordinate2D(latitude: 51.40007773, longitude: -0.2246402),
+            imgName: "city")
+]
+```
+
 5. Для геометок у меня используется класс Artwork
 
 ```swift
