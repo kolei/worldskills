@@ -1,5 +1,7 @@
 # Проект "Калькулятор"
 
+[Репозиторий проекта](https://github.com/kolei/wsr-calc)
+
 Чтобы не обрабатывать каждую кнопку отдельно, можно при создании первого оутлета выбрать в connection вместо "outlet" "outlet collection" 
 
 ![](img/collection.png)
@@ -16,6 +18,8 @@ for outlet in outletCollection {
 ```
 
 # Проект "погода"
+
+[Репозиторий проекта](https://github.com/kolei/wsr-weather)
 
 Создаем новый проект
 
@@ -287,6 +291,8 @@ override func viewWillAppear(_ animated: Bool) {
 При связи кнопки со вторым экраном выбираем "push"
 
 # Проект "Достопримечательности"
+
+[Репозиторий проекта](https://github.com/kolei/wsr-map)
 
 > Сразу отмечу, что делал не по тексту лекции, а по этому туториалу: 
 https://www.raywenderlich.com/548-mapkit-tutorial-getting-started
